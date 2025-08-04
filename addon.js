@@ -179,18 +179,25 @@
 
     function injectOMAConfigPanel() {
         function check() {
-            const geofsUIBar = document.querySelector('.geofs-ui-bottom');
-            if (!geofsUIBar) {
+            const geofsUILeft = document.querySelector(".geofs-ui-left");
+            const geofsUIBottom = document.querySelector(".geofs-ui-bottom");
+            if (!geofsUILeft || !geofsUIBottom) {
                 return requestAnimationFrame(check)
             }
             
-            fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/refs/heads/configurable-colors/config-panel/configPanel.html")
-                .then((res) => res.text())
-                .then((html) => {
-                    const configUIButton = document.createElement("button");
-                    configUIButton.innerHTML = html;
-                    geofsUIBar.appendChild(configUIButton)
+            Promise.all([
+                fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel-button.html"),
+                fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel.html")
+            ])
+                .then(([btnHtml, panelHtml]) => {
+                    geofsUIBottom.insertAdjacentHTML('beforeend', btnHtml);
+                    geofsUILeft.insertAdjacentHTML('beforeend', panelHtml);
+
+                    window.componentHandler.upgradeDom();
                 })
+                .catch((err) =>
+                    console.error("OMA Config Panel failed to load:", err)
+                );
             
         }
         check();
@@ -220,6 +227,9 @@
             }
         });
         // --- End Zeta's Contribution ---
+
+        // --- OMA Configuration ---
+        injectOMAConfigPanel();
 
         // --- Hostility Denoters ---
         injectHostilePilotIcon(); // Adds colored plane marker asset references.
