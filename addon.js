@@ -227,6 +227,15 @@
                     } catch (e) {
                         console.warn("MDL upgradeElement failed:", e);
                     }
+
+                    geofs.preferences.threat = geofs.preferences.threat || {};
+
+                    window.updateThreatMode = function() {
+                        const adv = !!geofs.preferences.threat.advanced;
+                        document.getElementById('threat-basic').style.display     = adv ? 'none' : '';
+                        document.getElementById('threat-advanced').style.display = adv ? ''   : 'none';
+                    };
+                    updateThreatMode();
                 })
                 .catch((err) =>
                     console.error("OMA Config Panel failed to load:", err)
