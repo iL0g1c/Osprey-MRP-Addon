@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoFS Chat Addon
 // @namespace
-// @version      0.0.2
+// @version      0.1.0
 // @description  General Addon for GeoFS chat
 // @author       Osprey
 // @license
@@ -47,6 +47,134 @@
         check();
     }
 
+    function injectHostilePilotIcon() {
+        function check() {
+            if (
+                typeof geofs === "object" &&
+                typeof geofs.map === "object" &&
+                typeof geofs.map.icons === "object"
+            ) {
+                geofs.map.icons = {
+                    ILS: {
+                        url: "images/map/icons/ils.png?v=1",
+                        size: [30, 30],
+                        anchor: [0, 0],
+                        offset: [0, 15],
+                        minZoom: 8
+                    },
+                    DME: {
+                        url: "images/map/icons/dme.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        minZoom: 5
+                    },
+                    NDB: {
+                        url: "images/map/icons/ndb.png",
+                        size: [40, 40],
+                        anchor: [20, 20],
+                        minZoom: 7
+                    },
+                    "NDB-DME": {
+                        url: "images/map/icons/ndb-dme.png",
+                        size: [40, 40],
+                        anchor: [20, 20],
+                        minZoom: 7
+                    },
+                    TACAN: {
+                        url: "images/map/icons/tacan.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        minZoom: 6
+                    },
+                    VOR: {
+                        url: "images/map/icons/vor.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        minZoom: 6
+                    },
+                    "VOR-DME": {
+                        url: "images/map/icons/vor-dme.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        minZoom: 6
+                    },
+                    VORTAC: {
+                        url: "images/map/icons/vortac.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        minZoom: 6
+                    },
+                    FIX: {
+                        url: "images/map/icons/fixflyby.png",
+                        size: [30, 30],
+                        anchor: [15, 15],
+                        minZoom: 1
+                    },
+                    WPT: {
+                        url: "images/map/icons/wptflyby.png",
+                        size: [40, 40],
+                        anchor: [20, 20],
+                        minZoom: 1
+                    },
+                    yellow: {
+                        url: geofs.localUrl + "images/map/icons/yellow.png",
+                        size: [40, 40],
+                        anchor: [20, 20],
+                        className: "geofs-myself-icon"
+                    },
+                    blue: {
+                        url: geofs.localUrl + "images/map/icons/blue.png",
+                        size: [30, 30],
+                        anchor: [15, 15],
+                        className: "geofs-map-icon"
+                    },
+                    traffic: {
+                        url: geofs.localUrl + "images/map/icons/blue.png",
+                        size: [20, 20],
+                        anchor: [10, 10],
+                        className: "geofs-traffic-icon"
+                    },
+                    hostile: {
+                        url: "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/refs/heads/hostiles/hostile.png",
+                        size: [30, 30],
+                        anchor: [15, 15],
+                        className: "geofs-map-icon"
+                    }
+                }
+            } else {
+                requestAnimationFrame(check);
+            }
+        }
+        check();
+    }
+
+    function injectGeofsApiMapMarker() {
+        function check() {
+            console.log("test");
+            if (
+                typeof geofs.api?.map?.marker === "function" &&
+                typeof geofs.map?.icons === "object"
+            ) {
+                const _origUpdate = geofs.api.map.marker.prototype.update;
+
+                geofs.api.map.marker.prototype.update = function(lat, lon, rotation, label) {
+                    // if the callsign contains "[U]", use the hostile icon
+                    if (typeof label === "string" && label.includes("[U]")) {
+                        this._marker.setIcon(
+                            geofs.api.map.getIcon("hostile", geofs.map.icons.hostile)
+                        );
+                    }
+                    // otherwise it stays with whatever icon it already had
+                    return _origUpdate.call(this, lat, lon, rotation, label);
+                };
+
+            } else {
+                requestAnimationFrame(check);
+            }
+        }
+        check();
+    }
+
     function init() {
         // Inject acid listing into chat. (ui.chat.publish())
         const script = document.createElement('script');
@@ -71,6 +199,10 @@
             }
         });
         // --- End Zeta's Contribution ---
+
+        // UTP player markers
+        injectHostilePilotIcon();
+        injectGeofsApiMapMarker();
     }
     init();
 })();
