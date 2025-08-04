@@ -183,7 +183,14 @@
             if (!geofsUIBar) {
                 return requestAnimationFrame(check)
             }
-
+            
+            fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/refs/heads/configurable-colors/config-panel/configPanel.html")
+                .then((res) => res.text())
+                .then((html) => {
+                    const configUIButton = document.createElement("button");
+                    configUIButton.innerHTML = html;
+                    geofsUIBar.appendChild(configUIButton)
+                })
             
         }
         check();
