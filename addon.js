@@ -150,7 +150,6 @@
 
     function injectGeofsApiMapMarker() {
         function check() {
-            console.log("test");
             if (
                 typeof geofs.api?.map?.marker === "function" &&
                 typeof geofs.map?.icons === "object"
