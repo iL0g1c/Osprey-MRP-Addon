@@ -187,7 +187,8 @@
                 !geofsUILeft ||
                 !geofsUIBottom ||
                 !ch ||
-                typeof ch.upgradeElement !== "function"
+                typeof ch.upgradeElement !== "function" ||
+                typeof geofs.preferences !== "object"
             ) {
                 return requestAnimationFrame(check)
             }
@@ -218,23 +219,31 @@
                     const panelEl = panelWrapper.firstElementChild;
                     geofsUILeft.appendChild(panelEl);
 
-                    // 3) theme them with MDL
-                    try {
-                        if (window.componentHandler?.upgradeElement) {
-                            componentHandler.upgradeElement(btnEl);
-                            componentHandler.upgradeElement(panelEl);
-                        }
-                    } catch (e) {
-                        console.warn("MDL upgradeElement failed:", e);
+                    // ── 3) ensure our prefs namespace exists *before* loading them
+                    if (!("threat" in geofs.preferences)) {
+                        geofs.preferences.threat = { advanced: false, filters: "", regex: "" };
                     }
 
-                    geofs.preferences.threat = geofs.preferences.threat || {};
+                    // ── 4) upgrade the new elements to initialize MDL widgets
+                    try {
+                        componentHandler.upgradeElement(btnEl);
+                        componentHandler.upgradeElement(panelEl);
+                    } catch (e) {
+                        console.error("MDL upgradeElement failed:", e);
+                    }
 
-                    window.updateThreatMode = function() {
+                    // ── 5) populate inputs from cookies
+                    geofs.setPreferenceValues(panelEl, true);
+
+                    // ── 6) wire up MDL change handlers
+                    geofs.setInputHandlers(panelEl);
+
+                    // ── 7) hook up and run our toggle logic
+                    function updateThreatMode() {
                         const adv = !!geofs.preferences.threat.advanced;
-                        document.getElementById('threat-basic').style.display     = adv ? 'none' : '';
-                        document.getElementById('threat-advanced').style.display = adv ? ''   : 'none';
-                    };
+                        panelEl.querySelector('#threat-basic').style.display = adv ? 'none' : '';
+                        panelEl.querySelector('#threat-advanced').style.display = adv ? '' : 'none';
+                    }
                     updateThreatMode();
                 })
                 .catch((err) =>
