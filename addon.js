@@ -135,7 +135,7 @@
                         className: "geofs-traffic-icon"
                     },
                     hostile: {
-                        url: "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/refs/heads/main/hostile.png",
+                        url: "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/refs/heads/main/assets/hostile.png",
                         size: [30, 30],
                         anchor: [15, 15],
                         className: "geofs-map-icon"
