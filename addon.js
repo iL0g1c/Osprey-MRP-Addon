@@ -18,6 +18,7 @@
         function check() {
             if (
                 typeof window.ui !== "object" ||
+                typeof window.ui.chat !== "object" ||
                 typeof window.ui.chat.publish !== "function"
             ) {
                 return requestAnimationFrame(check);
@@ -155,7 +156,7 @@
     function injectGeofsApiMapMarker() {
         function check() {
             if (
-                typeof geofs.api?.map?.marker !== "function" &&
+                typeof geofs.api?.map?.marker !== "function" ||
                 typeof geofs.map?.icons !== "object"
             ) {
                 return requestAnimationFrame(check);
@@ -177,23 +178,55 @@
         check();
     }
 
-    function injectOMAConfigPanel() {
+    function pageInjectOMAConfigPanel() {
         function check() {
             const geofsUILeft = document.querySelector(".geofs-ui-left");
             const geofsUIBottom = document.querySelector(".geofs-ui-bottom");
-            if (!geofsUILeft || !geofsUIBottom) {
+            const ch = window.componentHandler;
+            if (
+                !geofsUILeft ||
+                !geofsUIBottom ||
+                !ch ||
+                typeof ch.upgradeElement !== "function"
+            ) {
                 return requestAnimationFrame(check)
             }
+
+            const btnUrl = "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel-button.html";
+            const panelUrl = "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel.html";
             
             Promise.all([
-                fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel-button.html"),
-                fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel.html")
+                fetch(btnUrl).then(r => {
+                    if (!r.ok) throw new Error(`Config Panel Button failed: ${r.status}`);
+                    return r.text();
+                }),
+                fetch(panelUrl).then(r => {
+                    if (!r.ok) throw new Error(`Config Panel failed: ${r.status}`);
+                    return r.text();
+                })
             ])
                 .then(([btnHtml, panelHtml]) => {
-                    geofsUIBottom.insertAdjacentHTML('beforeend', btnHtml);
-                    geofsUILeft.insertAdjacentHTML('beforeend', panelHtml);
+                    // 1) parse & append button into bottom bar
+                    const btnWrapper = document.createElement("div");
+                    btnWrapper.innerHTML = btnHtml.trim();
+                    const btnEl = btnWrapper.firstElementChild;
+                    geofsUIBottom.appendChild(btnEl);
 
-                    window.componentHandler.upgradeDom();
+                    // 2) parse & append panel into left sidebar
+                    const panelWrapper = document.createElement("div");
+                    panelWrapper.innerHTML = panelHtml.trim();
+                    const panelEl = panelWrapper.firstElementChild;
+                    geofsUILeft.appendChild(panelEl);
+
+                    // 3) theme them with MDL
+                    try {
+                        if (window.componentHandler?.upgradeElement) {
+                            componentHandler.upgradeElement(btnEl);
+                            componentHandler.upgradeElement(panelEl);
+                        }
+                    } catch (e) {
+                        console.warn("MDL upgradeElement failed:", e);
+                    }
                 })
                 .catch((err) =>
                     console.error("OMA Config Panel failed to load:", err)
@@ -204,10 +237,12 @@
     }
 
     function init() {
-        // Inject acid listing into chat. (ui.chat.publish())
-        const script = document.createElement('script');
-        script.textContent = `(${overrideChatPublish.toString()})();`;
-        document.body.appendChild(script);
+        // Inject code that will not function sandbox-side.
+        [ overrideChatPublish, pageInjectOMAConfigPanel ].forEach(fn => {
+            const s = document.createElement('script');
+            s.textContent = `(${fn.toString()})();`;
+            document.body.appendChild(s);
+        });
 
         // --- Begin Zeta's Contribution ---
         // The following section of code was originally written by Zeta.
@@ -227,9 +262,6 @@
             }
         });
         // --- End Zeta's Contribution ---
-
-        // --- OMA Configuration ---
-        injectOMAConfigPanel();
 
         // --- Hostility Denoters ---
         injectHostilePilotIcon(); // Adds colored plane marker asset references.
