@@ -180,76 +180,50 @@
 
     function pageInjectOMAConfigPanel() {
         function check() {
-            const geofsUILeft = document.querySelector(".geofs-ui-left");
-            const geofsUIBottom = document.querySelector(".geofs-ui-bottom");
+            // 1) Wait for the Preferences UL to exist
+            const prefList = document.querySelector('ul.geofs-preference-list.geofs-preferences'); 
             const ch = window.componentHandler;
-            if (
-                !geofsUILeft ||
-                !geofsUIBottom ||
-                !ch ||
-                typeof ch.upgradeElement !== "function" ||
-                typeof geofs.preferences !== "object"
-            ) {
-                return requestAnimationFrame(check)
+            if (!prefList || !ch || typeof ch.upgradeDom !== 'function') {
+                return requestAnimationFrame(check);
             }
 
-            const btnUrl = "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel-button.html";
-            const panelUrl = "https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel.html";
-            
-            Promise.all([
-                fetch(btnUrl).then(r => {
-                    if (!r.ok) throw new Error(`Config Panel Button failed: ${r.status}`);
-                    return r.text();
-                }),
-                fetch(panelUrl).then(r => {
-                    if (!r.ok) throw new Error(`Config Panel failed: ${r.status}`);
-                    return r.text();
+            // 2) Only inject once
+            if (prefList.querySelector('#threatModeSwitch')) {
+                return;
+            }
+            fetch("https://raw.githubusercontent.com/iL0g1c/Osprey-MRP-Addon/configurable-colors/config-panel/config-panel.html")
+                .then(res => {
+                    if (!res.ok) throw new Error(`Config panel fetch failed: ${res.status}`);
+                    return res.text();
                 })
-            ])
-                .then(([btnHtml, panelHtml]) => {
-                    // 1) parse & append button into bottom bar
-                    const btnWrapper = document.createElement("div");
-                    btnWrapper.innerHTML = btnHtml.trim();
-                    const btnEl = btnWrapper.firstElementChild;
-                    geofsUIBottom.appendChild(btnEl);
+                .then(html => {
+                    const wrapper = document.createElement("div");
+                    wrapper.innerHTML = html;
+                    const item = wrapper.firstElementChild;
+                    prefList.appendChild(item);
 
-                    // 2) parse & append panel into left sidebar
-                    const panelWrapper = document.createElement("div");
-                    panelWrapper.innerHTML = panelHtml.trim();
-                    const panelEl = panelWrapper.firstElementChild;
-                    geofsUILeft.appendChild(panelEl);
+                    componentHandler.upgradeDom();
 
-                    // ── 3) ensure our prefs namespace exists *before* loading them
-                    if (!("threat" in geofs.preferences)) {
-                        geofs.preferences.threat = { advanced: false, filters: "", regex: "" };
-                    }
+                    geofs.setPreferenceValues(item);
+                    geofs.setInputHandlers(item);
 
-                    // ── 4) upgrade the new elements to initialize MDL widgets
-                    try {
-                        componentHandler.upgradeElement(btnEl);
-                        componentHandler.upgradeElement(panelEl);
-                    } catch (e) {
-                        console.error("MDL upgradeElement failed:", e);
-                    }
-
-                    // ── 5) populate inputs from cookies
-                    geofs.setPreferenceValues(panelEl, true);
-
-                    // ── 6) wire up MDL change handlers
-                    geofs.setInputHandlers(panelEl);
-
-                    // ── 7) hook up and run our toggle logic
-                    function updateThreatMode() {
-                        const adv = !!geofs.preferences.threat.advanced;
-                        panelEl.querySelector('#threat-basic').style.display = adv ? 'none' : '';
-                        panelEl.querySelector('#threat-advanced').style.display = adv ? '' : 'none';
-                    }
-                    updateThreatMode();
+                    const toggle = item.querySelector('#threatModeSwitch');
+                    const basic = item.querySelector('#threat-basic');
+                    const adv = item.querySelector('#threat-advanced');
+                    toggle.addEventListener('change', () => {
+                        if (toggle.checked) {
+                            basic.style.display = 'none';
+                            adv.style.display   = 'block';
+                        } else {
+                            basic.style.display = 'block';
+                            adv.style.display   = 'none';
+                        }
+                        // Persist switch state immediately
+                        geofs.setPreferenceFromInput(toggle);
+                    });
                 })
-                .catch((err) =>
-                    console.error("OMA Config Panel failed to load:", err)
-                );
-            
+                .catch(console.error);
+
         }
         check();
     }

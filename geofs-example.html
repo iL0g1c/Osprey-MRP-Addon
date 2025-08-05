@@ -1,0 +1,203 @@
+<li class="geofs-list-collapsible-item">Environment
+
+    <div class="geofs-collapsible">
+        <!-- Weather -->
+        <fieldset>
+            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events is-upgraded"
+                for="weatherManual" id="0.4814478913288661" tabindex="0" data-upgraded=",MaterialSwitch,MaterialRipple">
+                <input type="checkbox" id="weatherManual" class="mdl-switch__input"
+                    data-gespref="geofs.preferences.weather.manual"
+                    data-update="{weather.refresh();geofs.api.renderingQuality()}">
+                <span class="mdl-switch__label">Set environment manually</span>
+                <div class="mdl-switch__track"></div>
+                <div class="mdl-switch__thumb"><span class="mdl-switch__focus-helper"></span></div><span
+                    class="mdl-switch__ripple-container mdl-js-ripple-effect mdl-ripple--center"
+                    data-upgraded=",MaterialRipple"><span class="mdl-ripple"></span></span>
+            </label>
+            <div class="mdl-tooltip undefined" for="0.4814478913288661" data-upgraded=",MaterialTooltip">Set environment
+                manually</div>
+        </fieldset>
+
+        <fieldset>
+            <legend>METAR</legend>
+            <div class="geofs-metarDisplay">KTPH 051556Z AUTO 00000KT 10SM CLR 21/M07 A3019 RMK AO2 SLP146 T02111072
+            </div>
+        </fieldset>
+
+        <fieldset class="geofs-manualWeather" style="display: none;">
+            <legend>
+                Time of the day
+            </legend>
+
+            <div class="slider geofs-timeSlider" data-type="slider" data-gespref="geofs.preferences.weather.localTime"
+                data-update="{weather.setDateAndTime()}" value="" data-min="0" data-max="24" data-precision="2"
+                id="0.4540636515569826" tabindex="0">
+                <div class="slider-rail">
+                    <div class="slider-selection" style="width: 50%;">
+                        <div class="slider-grippy">
+                            <span class="slider-input-overlay">12:00</span>
+                            <input class="slider-input">
+                        </div>
+                    </div>
+                </div>
+                <label>Time of the day in hours</label>
+            </div>
+            <div class="mdl-tooltip undefined" for="0.4540636515569826" data-upgraded=",MaterialTooltip">Set time of day
+            </div>
+        </fieldset>
+
+        <fieldset class="geofs-manualWeather" style="display: none;">
+            <legend>
+                Weather
+            </legend>
+            <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.quality"
+                data-update="{weather.setManual()}" value="0" data-min="0" data-max="100" data-precision="0"
+                id="0.5491195339395039" tabindex="0">
+                <div class="slider-rail">
+                    <div class="slider-selection" style="width: 0%;">
+                        <div class="slider-grippy">
+                            <input class="slider-input">
+                        </div>
+                    </div>
+                </div>
+                <label>Weather quality</label>
+            </div>
+            <div class="mdl-tooltip undefined" for="0.5491195339395039" data-upgraded=",MaterialTooltip">Weather quality
+            </div>
+
+            <div class="slider geofs-seasonSlider" data-type="slider" data-gespref="geofs.preferences.weather.season"
+                data-update="{weather.setManual()}" value="" data-min="0" data-max="100" data-precision="0"
+                id="0.6337581102618386" tabindex="0">
+                <div class="slider-rail">
+                    <div class="slider-selection" style="width: 1%;">
+                        <div class="slider-grippy">
+                            <span class="slider-input-overlay">Spring</span>
+                            <input class="slider-input">
+                        </div>
+                    </div>
+                </div>
+                <label>Season</label>
+            </div>
+            <div class="mdl-tooltip undefined" for="0.6337581102618386" data-upgraded=",MaterialTooltip">Season</div>
+
+        </fieldset>
+
+        <fieldset class="geofs-manualWeather geofs-advancedWeather geofs-advanced" style="display: none;">
+            <span class="geofs-advancedToggle">
+                Advanced
+            </span>
+            <div class="geofs-stopMousePropagation">
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.clouds"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="100" data-precision="0"
+                    id="0.4461757375800378" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Clouds</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.4461757375800378" data-upgraded=",MaterialTooltip">Clouds
+                </div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.cloudBase"
+                    data-update="{weather.setAdvanced()}" value="1500" data-min="1" data-max="5000" data-precision="0"
+                    id="0.5692013808041776" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 29.986%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Clouds Ceiling m.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.5692013808041776" data-upgraded=",MaterialTooltip">
+                    CloudsCeiling</div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.cloudThickness"
+                    data-update="{weather.setAdvanced()}" value="4000" data-min="500" data-max="10000"
+                    data-precision="0" id="0.6779722338548827" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 36.8421%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Clouds Thickness m.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.6779722338548827" data-upgraded=",MaterialTooltip">
+                    CloudsThickness</div>
+                <div class="slider" data-type="slider"
+                    data-gespref="geofs.preferences.weather.advanced.precipitationAmount"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="100" data-precision="0"
+                    id="0.628908707397493" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Precipitations</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.628908707397493" data-upgraded=",MaterialTooltip">
+                    Precipitations</div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.fog"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="100" data-precision="0"
+                    id="0.42782370794591196" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Fog</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.42782370794591196" data-upgraded=",MaterialTooltip">Fog</div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.fogCeiling"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="3000" data-precision="0"
+                    id="0.5210329638357449" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Fog Ceiling m.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.5210329638357449" data-upgraded=",MaterialTooltip">FogCeiling
+                </div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.windSpeedKts"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="40" data-precision="0"
+                    id="0.18999610481172402" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Wind Speed knots</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.18999610481172402" data-upgraded=",MaterialTooltip">windSpeed
+                </div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.windDirection"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="360" data-precision="0"
+                    id="0.7432867342316729" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Wind Direction Deg.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.7432867342316729" data-upgraded=",MaterialTooltip">
+                    windDirection</div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.turbulences"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="1" data-precision="1"
+                    id="0.8456359312699555" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Turbulences.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.8456359312699555" data-upgraded=",MaterialTooltip">turbulences
+                </div>
+                <div class="slider" data-type="slider" data-gespref="geofs.preferences.weather.advanced.thermals"
+                    data-update="{weather.setAdvanced()}" value="0" data-min="0" data-max="1" data-precision="1"
+                    id="0.36554863846545427" tabindex="0">
+                    <div class="slider-rail">
+                        <div class="slider-selection" style="width: 0%;">
+                            <div class="slider-grippy"><input class="slider-input"></div>
+                        </div>
+                    </div><label>Thermals.</label>
+                </div>
+                <div class="mdl-tooltip undefined" for="0.36554863846545427" data-upgraded=",MaterialTooltip">thermals
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</li>

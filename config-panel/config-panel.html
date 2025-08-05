@@ -1,44 +1,27 @@
-<ul class="geofs-list geofs-toggle-panel oma-config-panel" data-parent-z-index="2000" data-parent-width="240px">
-    <!-- Threat Classification -->
-    <li class="geofs-list-collapsible-item">
-        Threat Classification
-        <div class="geofs-collapsible">
-            <!-- Toggle between basic/advanced -->
-            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="threatModeSwitch">
-                <input id="threatModeSwitch" type="checkbox" class="mdl-switch__input"
-                    data-gespref="geofs.preferences.threat.advanced" data-update="updateThreatMode()" />
-                <span class="mdl-switch__label">Advanced Mode</span>
-            </label>
-
-            <!-- Basic filters (comma-separated) -->
-            <div id="threat-basic" style="margin-top:8px;">
-                <textarea data-type="textarea" id="threatFilters" rows="3" style="width:100%;"
-                    data-gespref="geofs.preferences.threat.filters"
-                    placeholder="Enter filters (comma-separated)"></textarea>
+<li class="geofs-list-collapsible-item">
+    Threat Classification
+    <div class="geofs-collapsible">
+        <!-- Toggle between basic / advanced -->
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="threatModeSwitch">
+            <input id="threatModeSwitch" type="checkbox" class="mdl-switch__input"
+                data-gespref="geofs.preferences.threat.advanced">
+            <span class="mdl-switch__label">Advanced Mode</span>
+            <div class="mdl-switch__track"></div>
+            <div class="mdl-switch__thumb">
+                <span class="mdl-switch__focus-helper"></span>
             </div>
+        </label>
 
-            <!-- Advanced regex (one per line) -->
-            <div id="threat-advanced" style="display:none; margin-top:8px;">
-                <textarea data-type="textarea" id="threatRegex" rows="3" style="width:100%;" data-gespref="geofs.preferences.threat.regex"
-                    placeholder="Enter regex patterns, one per line"></textarea>
-            </div>
-
-            <div class="geofs-preferenceForm geofs-hideForMobile" style="padding:10px;">
-                <div style="float:left;">
-                    <button class="mdl-button mdl-js-button mdl-button--raised" onclick="geofs.cancelPreferencesPanel()"
-                        data-upgraded=",MaterialButton">
-                        Cancel
-                    </button>
-                </div>
-                <div style="float:right;">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
-                        onclick="geofs.savePreferencesPanel(); ui.closePreferencePanel();"
-                        data-upgraded=",MaterialButton">
-                        Save &amp; Close
-                    </button>
-                </div>
-                <div style="clear:both"></div>
-            </div>
+        <!-- Basic filters (comma-separated) -->
+        <div id="threat-basic" style="margin-top:8px;">
+            <textarea id="threatFilters" rows="3" style="width:100%;" data-gespref="geofs.preferences.threat.filters"
+                placeholder="Enter filters (comma-separated)"></textarea>
         </div>
-    </li>
-</ul>
+
+        <!-- Advanced regex (one per line) -->
+        <div id="threat-advanced" style="display:none; margin-top:8px;">
+            <textarea id="threatRegex" rows="3" style="width:100%;" data-gespref="geofs.preferences.threat.regex"
+                placeholder="Enter regex patterns, one per line"></textarea>
+        </div>
+    </div>
+</li>
